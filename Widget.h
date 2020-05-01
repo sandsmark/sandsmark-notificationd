@@ -61,6 +61,7 @@ public slots:
 signals:
     void actionClicked(const int id, const QString &action);
     void notificationClosed(const int id, const int reason);
+    void muteRequested();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

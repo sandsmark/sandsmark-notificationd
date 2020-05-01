@@ -17,6 +17,7 @@ add_executable(sandsmark-notificationd
     Manager.cpp
     Widget.cpp
     Widget.h
+    icons.qrc
     )
 
 target_link_libraries(sandsmark-notificationd PRIVATE Qt5::Widgets Qt5::DBus)

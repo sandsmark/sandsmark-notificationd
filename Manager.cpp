@@ -3,9 +3,18 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDebug>
+#include <QSystemTrayIcon>
+#include <QTimer>
 
 Manager::Manager(QObject *parent) : QObject(parent)
 {
+    m_unmuteIcon = new QSystemTrayIcon(this);
+    connect(m_unmuteIcon, &QSystemTrayIcon::activated, this, &Manager::onUnmute);
+
+    m_unmuteTimer = new QTimer(this);
+    m_unmuteTimer->setInterval(5 * 60 * 1000);
+    m_unmuteTimer->setSingleShot(true);
+    connect(m_unmuteTimer, &QTimer::timeout, this, &Manager::onUnmute);
 }
 
 static const char *serviceName = "org.freedesktop.Notifications";
@@ -42,6 +51,12 @@ quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QSt
     qDebug() << "hints"<< hints;
     qDebug() << "timeout" << timeout;
 
+    if (m_unmuteTimer->isActive()) {
+        qDebug() << "Notifications muted";
+        m_unmuteIcon->setIcon(QPixmap(":/muted-active.png"));
+        return m_lastId++;
+    }
+
     Widget *widget = new Widget;
     connect(this, &QObject::destroyed, widget, &QWidget::deleteLater);
     widget->setAppIcon(appIconName);
@@ -61,6 +76,7 @@ quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QSt
         break;
     }
 
+    connect(widget, &Widget::muteRequested, this, &Manager::onMuted, Qt::QueuedConnection);
     connect(widget, &Widget::notificationClosed, this, &Manager::NotificationClose, Qt::QueuedConnection);
     connect(this, &Manager::NotificationClose, widget, &Widget::onCloseRequested, Qt::QueuedConnection);
 
@@ -86,4 +102,18 @@ QStringList Manager::GetCapabilities()
 void Manager::CloseNotification(quint32 id)
 {
     qDebug() << "Asked to close" << id;
+}
+
+void Manager::onMuted()
+{
+    m_unmuteIcon->setIcon(QPixmap(":/muted.png"));
+    m_unmuteIcon->show();
+
+    m_unmuteTimer->start();
+}
+
+void Manager::onUnmute()
+{
+    m_unmuteIcon->hide();
+    m_unmuteTimer->stop();
 }

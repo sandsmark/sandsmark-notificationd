@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>muted.png</file>
+        <file>muted-active.png</file>
+    </qresource>
+</RCC>

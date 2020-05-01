@@ -3,6 +3,10 @@
 
 #include <QObject>
 
+class QTimer;
+
+class QSystemTrayIcon;
+
 class Manager : public QObject
 {
     Q_OBJECT
@@ -34,8 +38,14 @@ signals:
 
     void closeRequested(int id);
 
+private slots:
+    void onMuted();
+    void onUnmute();
+
 private:
     int m_lastId = 0;
+    QSystemTrayIcon *m_unmuteIcon = nullptr;
+    QTimer *m_unmuteTimer = nullptr;
 };
 
 #endif // MANAGER_H
