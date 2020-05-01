@@ -61,8 +61,8 @@ quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QSt
         break;
     }
 
-    connect(widget, &Widget::notificationClosed, this, &Manager::NotificationClose);
-    connect(this, &Manager::NotificationClose, widget, &Widget::onCloseRequested);
+    connect(widget, &Widget::notificationClosed, this, &Manager::NotificationClose, Qt::QueuedConnection);
+    connect(this, &Manager::NotificationClose, widget, &Widget::onCloseRequested, Qt::QueuedConnection);
 
     return m_lastId++;
 }

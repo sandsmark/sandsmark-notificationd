@@ -13,11 +13,20 @@
 #include <QScreen>
 #include <QDesktopServices>
 
+int Widget::s_visibleNotifications = 0;
+
 Widget::Widget()
 {
+
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus | Qt::Tool);
     setAttribute(Qt::WA_TranslucentBackground);
+
+    if (s_visibleNotifications > 10) {
+        qWarning() << "Too many visible notifications already";
+        close();
+    }
+    s_visibleNotifications++;
 //    static int num = 0;
 //    setObjectName("Popup" + QString::number(num++));
     setStyleSheet("QWidget {\n"
@@ -100,6 +109,8 @@ Widget::Widget()
 
 Widget::~Widget()
 {
+    s_visibleNotifications--;
+
     qDebug() << "Widget destroyed";
     emit notificationClosed(m_id, 2); // always fake that the user clicked it away
 }
@@ -159,7 +170,7 @@ void Widget::resizeEvent(QResizeEvent *)
 {
     const QRect screenGeometry = screen()->geometry();
 
-    move(screenGeometry.width() - width() - 10, screenGeometry.height() - height() - 30);
+    move(screenGeometry.width() - width() - 10, screenGeometry.height() - height() * s_visibleNotifications - 30);
 }
 
 void Widget::onUrlClicked(const QUrl &url)
@@ -170,6 +181,7 @@ void Widget::onUrlClicked(const QUrl &url)
 void Widget::onCloseRequested(const int id)
 {
     if (id == m_id) {
+        qDebug() << "Requested that we close";
         close();
     }
 }

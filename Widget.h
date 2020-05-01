@@ -77,5 +77,7 @@ private:
     QTimer *m_dismissTimer;
     BodyWidget *m_body;
     int m_id;
+
+    static int s_visibleNotifications;
 };
 #endif // WIDGET_H
