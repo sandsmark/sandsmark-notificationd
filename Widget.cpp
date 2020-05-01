@@ -101,6 +101,7 @@ Widget::Widget()
 Widget::~Widget()
 {
     qDebug() << "Widget destroyed";
+    emit notificationClosed(m_id, 2); // always fake that the user clicked it away
 }
 
 void Widget::setSummary(const QString &summary)
@@ -113,6 +114,12 @@ void Widget::setBody(const QString &body)
     m_body->setVisible(true); // We have to set this as visible first, and then hide, to force it to load the resources. They are deleted after the dbus call returns
     m_body->setHtml(body);
     m_body->setVisible(false); // We have to set this as visible first, and then hide, to force it to load the resources. They are deleted after the dbus call returns
+}
+
+void Widget::setDefaultAction(const QString &action)
+{
+    m_appIcon->setClickAction(action);
+    m_appIcon->setCursor(Qt::PointingHandCursor);
 }
 
 void Widget::setAppName(const QString &name)
@@ -158,6 +165,13 @@ void Widget::resizeEvent(QResizeEvent *)
 void Widget::onUrlClicked(const QUrl &url)
 {
     qDebug() << "Clicked" << url;
+}
+
+void Widget::onCloseRequested(const int id)
+{
+    if (id == m_id) {
+        close();
+    }
 }
 
 

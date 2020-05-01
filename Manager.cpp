@@ -61,6 +61,9 @@ quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QSt
         break;
     }
 
+    connect(widget, &Widget::notificationClosed, this, &Manager::NotificationClose);
+    connect(this, &Manager::NotificationClose, widget, &Widget::onCloseRequested);
+
     return m_lastId++;
 }
 
@@ -78,4 +81,9 @@ QStringList Manager::GetCapabilities()
         "persistence",
         "sound"
     };
+}
+
+void Manager::CloseNotification(quint32 id)
+{
+    qDebug() << "Asked to close" << id;
 }

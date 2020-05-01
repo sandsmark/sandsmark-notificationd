@@ -47,16 +47,20 @@ public:
     void setSummary(const QString &summary);
     void setBody(const QString &body);
 
-    void setNotificationId(const int id) { m_appIcon->setNotificationId(id); }
-    void setDefaultAction(const QString &action) { m_appIcon->setClickAction(action); }
+    void setNotificationId(const int id) { m_appIcon->setNotificationId(id); m_id = id; }
+    void setDefaultAction(const QString &action);
 
     void setAppName(const QString &name);
     void setAppIcon(const QString &iconPath);
 
     void setTimeout(int timeout);
 
+public slots:
+    void onCloseRequested(const int id);
+
 signals:
     void actionClicked(const int id, const QString &action);
+    void notificationClosed(const int id, const int reason);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -72,5 +76,6 @@ private:
     QLabel *m_appName;
     QTimer *m_dismissTimer;
     BodyWidget *m_body;
+    int m_id;
 };
 #endif // WIDGET_H

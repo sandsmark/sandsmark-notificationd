@@ -26,9 +26,13 @@ public slots:
                                  );
 
     Q_SCRIPTABLE QStringList GetCapabilities();
+    Q_SCRIPTABLE void CloseNotification(quint32 id);
 
 signals:
     Q_SCRIPTABLE void ActionInvoked(const quint32 id, const QString &action_key);
+    Q_SCRIPTABLE void NotificationClose(const quint32 id, const quint32 reason);
+
+    void closeRequested(int id);
 
 private:
     int m_lastId = 0;
