@@ -48,6 +48,10 @@ Widget::Widget()
     appLayout->setSpacing(0);
     mainLayout->addLayout(appLayout);
 
+    m_appIcon = new ClickableIcon;
+    m_appIcon->setMaximumHeight(60);
+    appLayout->addWidget(m_appIcon);
+
     m_summary = new QLabel;
     appLayout->addWidget(m_summary);
 
@@ -56,9 +60,6 @@ Widget::Widget()
     appStretch->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     appStretch->setFocusPolicy(Qt::NoFocus);
     appLayout->addWidget(appStretch);
-
-    m_appIcon = new ClickableIcon;
-    appLayout->addWidget(m_appIcon);
 
     m_appName = new QLabel;
     appLayout->addWidget(m_appName);
@@ -149,12 +150,13 @@ void Widget::setAppIcon(const QString &iconPath)
     if (!iconUrl.isLocalFile()) {
         iconUrl = QUrl::fromLocalFile(iconPath);
     }
-    QPixmap pixmap(iconUrl.toLocalFile());
-    if (pixmap.isNull()) {
+    QImage icon(iconUrl.toLocalFile());
+    if (icon.isNull()) {
         qWarning() << "Invalid icon path" << iconPath;
         return;
     }
-    m_appIcon->setPixmap(pixmap);
+    icon = icon.scaled(60, 60, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    m_appIcon->setPixmap(QPixmap::fromImage(icon));
 }
 
 void Widget::setTimeout(int timeout)
