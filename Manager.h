@@ -25,12 +25,17 @@ public slots:
                                  const QString &body,
                                  const QStringList &actions,
                                  const QVariantMap &hints,
-//                                 const QMap<QString, QString> &hints,
                                  const int timeout
                                  );
 
     Q_SCRIPTABLE QStringList GetCapabilities();
     Q_SCRIPTABLE void CloseNotification(quint32 id);
+    Q_SCRIPTABLE QString GetServerInformation(QString &vendor, QString &version, QString &specVersion) {
+        specVersion = "garbage";
+        version = "utter";
+        vendor = "is";
+        return "libnotify";
+    }
 
 signals:
     Q_SCRIPTABLE void ActionInvoked(const quint32 id, const QString &action_key);
