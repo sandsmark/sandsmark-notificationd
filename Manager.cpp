@@ -57,12 +57,24 @@ quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QSt
         return m_lastId++;
     }
 
+    QString icon;
+    if (hints.contains("image_path")) {
+        icon = hints["image_path"].toString();
+    }
+    if (icon.isEmpty() && hints.contains("image-path")) {
+        icon = hints["image_path"].toString();
+    }
+    if (icon.isEmpty()) {
+        icon = appIconName;
+    }
+
+
     Widget *widget = new Widget;
     connect(this, &QObject::destroyed, widget, &QWidget::deleteLater);
-    widget->setAppIcon(appIconName);
     widget->setAppName(name);
     widget->setSummary(summary);
     widget->setBody(body);
+    widget->setAppIcon(icon);
     widget->show();
 
     for (int i=0; i<actions.length() - 1; i++) {
