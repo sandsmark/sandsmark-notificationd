@@ -127,7 +127,7 @@ Widget::~Widget()
 
 void Widget::setSummary(const QString &summary)
 {
-    m_summary->setText(summary);
+    m_summary->setText(m_summary->fontMetrics().elidedText(summary, Qt::ElideRight, 500));
 }
 
 void Widget::setBody(const QString &body)
