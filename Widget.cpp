@@ -17,7 +17,6 @@ int Widget::s_visibleNotifications = 0;
 
 Widget::Widget()
 {
-
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus | Qt::Tool);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -27,29 +26,24 @@ Widget::Widget()
         close();
     }
     s_visibleNotifications++;
-//    static int num = 0;
-//    setObjectName("Popup" + QString::number(num++));
     setStyleSheet("QWidget {\n"
-                "    background-color: rgba(0, 0, 0, 192);"//, 192);\n"
-                "    color: white;\n"
-//                "    selection-background-color: white;\n"
-                "}\n");
-//    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus | Qt::Tool);
+                  "    background-color: rgba(0, 0, 0, 192);\n"
+                  "    color: white;\n"
+                  "}\n");
 
-//    setWindowFlag(Qt::WindowStaysOnBottomHint);
-//    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setMargin(0);
     mainLayout->setSpacing(0);
     setWindowOpacity(1);
 
     QHBoxLayout *appLayout = new QHBoxLayout;
-    appLayout->setMargin(0);
+    appLayout->setContentsMargins(0, 0, 0, 0);
     appLayout->setSpacing(0);
     mainLayout->addLayout(appLayout);
 
     m_appIcon = new ClickableIcon;
-    m_appIcon->setMaximumHeight(60);
+    m_appIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     appLayout->addWidget(m_appIcon);
 
     m_summary = new QLabel;
@@ -200,16 +194,20 @@ void Widget::onCloseRequested(const int id)
 
 QVariant BodyWidget::loadResource(int type, const QUrl &name)
 {
-    if (type != QTextDocument::ImageResource) {
-        qWarning() << "Skipping type" << type;
-        return QVariant();
-    }
-
     if (!name.isLocalFile()) {
         qWarning() << "Refusing non-local resource" << name;
         return QVariant();
     }
 
+    if (type == QTextDocument::ImageResource) {
+        return QImage(name.toLocalFile());
+    }
+
+    qDebug() << "Requested" << name << "of type" << type;
+    if (type != QTextDocument::ImageResource) {
+        qWarning() << "Refusing type" << type << "for now";
+        return QVariant();
+    }
 
     QFile file(name.toLocalFile());
     if (!file.open(QIODevice::ReadOnly)) {

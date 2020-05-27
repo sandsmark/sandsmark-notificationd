@@ -71,7 +71,6 @@ private slots:
     void onUrlClicked(const QUrl &url);
 
 private:
-    QLabel *m_title;
     QLabel *m_summary;
     ClickableIcon *m_appIcon;
     QLabel *m_appName;
