@@ -110,7 +110,7 @@ Widget::Widget()
     connect(showBodyButton, &QPushButton::clicked, m_dismissTimer, &QTimer::stop);
     m_dismissTimer->start();
 
-    resize(600, 50);
+    resize(600, 150);
 
     setVisible(true);
     adjustSize();
