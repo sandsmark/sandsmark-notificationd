@@ -67,6 +67,8 @@ signals:
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void leaveEvent(QEvent *event) override;
+    void enterEvent(QEvent *event) override;
 
 private slots:
     void onUrlClicked(const QUrl &url);
@@ -78,6 +80,7 @@ private:
     QTimer *m_dismissTimer;
     BodyWidget *m_body;
     int m_id;
+    int m_timeLeft = 0;
 
     static int s_visibleNotifications;
 };

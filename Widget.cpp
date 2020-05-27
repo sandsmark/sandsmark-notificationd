@@ -35,7 +35,7 @@ Widget::Widget()
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setMargin(0);
     mainLayout->setSpacing(0);
-    setWindowOpacity(1);
+    setWindowOpacity(0.5);
 
     QHBoxLayout *appLayout = new QHBoxLayout;
     appLayout->setContentsMargins(0, 0, 0, 0);
@@ -190,6 +190,24 @@ void Widget::resizeEvent(QResizeEvent *)
     const QRect screenGeometry = screen()->geometry();
 
     move(screenGeometry.width() - width() - 10, screenGeometry.height() - height() * s_visibleNotifications - 30);
+}
+
+void Widget::enterEvent(QEvent *)
+{
+    setWindowOpacity(1);
+    m_timeLeft = m_dismissTimer->remainingTime();
+    m_dismissTimer->stop();
+}
+
+void Widget::leaveEvent(QEvent *)
+{
+    if (m_body->isVisible()) {
+        return;
+    }
+    setWindowOpacity(0.4); // slightly less visible on purpose, yes thank you
+    if (m_timeLeft > 0) {
+        m_dismissTimer->start(m_timeLeft);
+    }
 }
 
 void Widget::onUrlClicked(const QUrl &url)
