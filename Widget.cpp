@@ -144,17 +144,31 @@ void Widget::setAppName(const QString &name)
 
 void Widget::setAppIcon(const QString &iconPath)
 {
-    QUrl iconUrl(iconPath);
-    if (!iconUrl.isLocalFile()) {
-        iconUrl = QUrl::fromLocalFile(iconPath);
+    QImage icon;
+
+    if (!iconPath.isEmpty()) {
+        QUrl iconUrl(iconPath);
+        if (!iconUrl.isLocalFile()) {
+            iconUrl = QUrl::fromLocalFile(iconPath);
+        }
+        icon = QImage(iconUrl.toLocalFile());
+    } else {
+        qDebug() << "Tried to set empty icon";
     }
-    QImage icon(iconUrl.toLocalFile());
+    setAppIcon(icon);
+}
+
+void Widget::setAppIcon(const QImage &icon)
+{
     if (icon.isNull()) {
-        qWarning() << "Invalid icon path" << iconPath;
+        m_appIcon->setPixmap(QPixmap(":/annoying.png"));
+        qWarning() << "Invalid icon";
         return;
     }
-    icon = icon.scaled(60, 60, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-    m_appIcon->setPixmap(QPixmap::fromImage(icon));
+
+    m_appIcon->setPixmap(QPixmap::fromImage(
+            icon.scaled(64, 64, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation)
+        ));
 }
 
 void Widget::setTimeout(int timeout)

@@ -52,6 +52,7 @@ public:
 
     void setAppName(const QString &name);
     void setAppIcon(const QString &iconPath);
+    void setAppIcon(const QImage &icon);
 
     void setTimeout(int timeout);
 

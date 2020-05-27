@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QSystemTrayIcon>
 #include <QTimer>
+#include <QDBusArgument>
 
 Manager::Manager(QObject *parent) : QObject(parent)
 {
@@ -38,6 +39,57 @@ bool Manager::init()
     }
 
     return true;
+}
+
+QImage decodeIcon(const QDBusArgument &crap)
+{
+    int width, height, bytesPerLine, hasAlpha, bitsPerPixel, channels;
+    QByteArray data;
+
+    crap.beginStructure();
+    crap >> width >> height >> bytesPerLine >> hasAlpha >> bitsPerPixel >> channels >> data;
+    crap.endStructure();
+
+    if (width < 0 || width > 1000 || height < 0 || height > 1000) {
+        qWarning() << "Invalid size" << width << height;
+        return QImage();
+    }
+
+    if (bitsPerPixel != 8) {
+        qWarning() << "Unsupported depth" << bitsPerPixel;
+        return QImage();
+    }
+
+    if (channels == 4) {
+        if (!hasAlpha) {
+            qWarning() << "Invalid number of channels without alpha" << channels << hasAlpha;
+            return QImage();
+        }
+    } else if (channels == 3) {
+        if (hasAlpha) {
+            qWarning() << "Invalid number of channels with alpha" << channels << hasAlpha;
+            return QImage();
+        }
+    } else {
+        qWarning() << "Invalid number of channels" << channels;
+        return QImage();
+    }
+
+    const int expectedBytes = bytesPerLine * height;
+    if (expectedBytes != data.size()) {
+        qWarning() << "Invalid amount of pixels" << expectedBytes << data.size();
+        return QImage();
+    }
+
+
+    return QImage(
+            reinterpret_cast<uchar*>(data.data()),
+            width,
+            height,
+            bytesPerLine,
+            hasAlpha ? QImage::Format_ARGB32 : QImage::Format_RGB32
+            )
+        .copy();
 }
 
 quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QString &appIconName, const QString &summary, const QString &body, const QStringList &actions, const QVariantMap &hints, const int timeout)
@@ -74,7 +126,13 @@ quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QSt
     widget->setAppName(name);
     widget->setSummary(summary);
     widget->setBody(body);
-    widget->setAppIcon(icon);
+    if (!icon.isEmpty()) {
+        widget->setAppIcon(icon);
+    } else {
+        qWarning() << "Got deprecated image data";
+
+        widget->setAppIcon(decodeIcon(qvariant_cast<QDBusArgument>(hints["icon_data"])));
+    }
     widget->show();
 
     for (int i=0; i<actions.length() - 1; i++) {
@@ -83,7 +141,7 @@ quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QSt
         }
 
         widget->setNotificationId(m_lastId);
-        widget->setDefaultAction(actions[i + 1]);
+        widget->setDefaultAction(actions[i ]);
         connect(widget, &Widget::actionClicked, this, &Manager::ActionInvoked);
         break;
     }
