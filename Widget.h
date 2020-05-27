@@ -45,7 +45,7 @@ public:
 
     void setTitle(const QString &title);
     void setSummary(const QString &summary);
-    void setBody(const QString &body);
+    void setBody(QString body);
 
     void setNotificationId(const int id) { m_appIcon->setNotificationId(id); m_id = id; }
     void setDefaultAction(const QString &action);

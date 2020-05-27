@@ -124,10 +124,10 @@ void Widget::setSummary(const QString &summary)
     m_summary->setText(m_summary->fontMetrics().elidedText(summary, Qt::ElideRight, 500));
 }
 
-void Widget::setBody(const QString &body)
+void Widget::setBody(QString body)
 {
     m_body->setVisible(true); // We have to set this as visible first, and then hide, to force it to load the resources. They are deleted after the dbus call returns
-    m_body->setHtml(body);
+    m_body->setHtml(body.replace("\n", "<br/>"));
     m_body->setVisible(false); // We have to set this as visible first, and then hide, to force it to load the resources. They are deleted after the dbus call returns
 }
 
