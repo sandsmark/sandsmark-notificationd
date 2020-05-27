@@ -107,6 +107,7 @@ Widget::Widget()
     m_dismissTimer->setInterval(10000);
     m_dismissTimer->setSingleShot(true);
     connect(m_dismissTimer, &QTimer::timeout, this, &QWidget::close);
+    connect(showBodyButton, &QPushButton::clicked, m_dismissTimer, &QTimer::stop);
     m_dismissTimer->start();
 
     resize(600, 50);
