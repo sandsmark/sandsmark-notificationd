@@ -58,10 +58,13 @@ Widget::Widget()
     QWidget *appStretch = new QWidget;
     appStretch->setMinimumSize(0, 0);
     appStretch->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    appStretch->setFocusPolicy(Qt::NoFocus);
+    //appStretch->setFocusPolicy(Qt::NoFocus);
     appLayout->addWidget(appStretch);
 
     m_appName = new QLabel;
+    QFont appFont = m_appName->font();
+    appFont.setBold(true);
+    m_appName->setFont(appFont);
     appLayout->addWidget(m_appName);
 
     QVBoxLayout *contentLayout = new QVBoxLayout;
