@@ -21,3 +21,4 @@ add_executable(sandsmark-notificationd
     )
 
 target_link_libraries(sandsmark-notificationd PRIVATE Qt5::Widgets Qt5::DBus)
+install(TARGETS sandsmark-notificationd DESTINATION bin)
