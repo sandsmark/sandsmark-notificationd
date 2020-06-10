@@ -25,7 +25,7 @@ Widget::Widget()
         qWarning() << "Too many visible notifications already";
         close();
     }
-    s_visibleNotifications++;
+    m_index = s_visibleNotifications++;
     setStyleSheet("QWidget {\n"
                   "    background-color: rgba(0, 0, 0, 192);\n"
                   "    color: white;\n"
@@ -189,7 +189,7 @@ void Widget::resizeEvent(QResizeEvent *)
 {
     const QRect screenGeometry = screen()->geometry();
 
-    move(screenGeometry.width() - width() - 10, screenGeometry.height() - height() * s_visibleNotifications - 30);
+    move(screenGeometry.width() - width() - 10, screenGeometry.height() - height() * m_index - 30);
 }
 
 void Widget::enterEvent(QEvent *)

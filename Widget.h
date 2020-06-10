@@ -81,6 +81,7 @@ private:
     BodyWidget *m_body;
     int m_id;
     int m_timeLeft = 0;
+    int m_index = 0;
 
     static int s_visibleNotifications;
 };
