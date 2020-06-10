@@ -25,7 +25,7 @@ Widget::Widget()
         qWarning() << "Too many visible notifications already";
         close();
     }
-    m_index = s_visibleNotifications++;
+    m_index = ++s_visibleNotifications;
     setStyleSheet("QWidget {\n"
                   "    background-color: rgba(0, 0, 0, 192);\n"
                   "    color: white;\n"
