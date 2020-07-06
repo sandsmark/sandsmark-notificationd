@@ -27,7 +27,7 @@ Widget::Widget()
     }
     m_index = ++s_visibleNotifications;
     setStyleSheet("QWidget {\n"
-                  "    background-color: rgba(0, 0, 0, 192);\n"
+                  "    background-color: rgba(0, 0, 0, 200);\n"
                   "    color: white;\n"
                   "}\n");
 
@@ -52,7 +52,6 @@ Widget::Widget()
     QWidget *appStretch = new QWidget;
     appStretch->setMinimumSize(0, 0);
     appStretch->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    //appStretch->setFocusPolicy(Qt::NoFocus);
     appLayout->addWidget(appStretch);
 
     m_appName = new QLabel;
@@ -66,18 +65,14 @@ Widget::Widget()
     contentLayout->setSpacing(0);
     mainLayout->addLayout(contentLayout);
 
-    QPushButton *showBodyButton = new QPushButton("Details..");
-    contentLayout->addWidget(showBodyButton);
+    m_body = new BodyWidget;
+    m_body->setFixedSize(600, 100);
+    m_body->setFocusPolicy(Qt::NoFocus);
+    m_body->setOpenLinks(false);
+    contentLayout->addWidget(m_body);
 
     QPushButton *muteButton = new QPushButton("Mute 5 minutes");
     contentLayout->addWidget(muteButton);
-
-    m_body = new BodyWidget;
-    m_body->setMinimumSize(600, 1);
-    m_body->setFocusPolicy(Qt::NoFocus);
-    m_body->setVisible(false); // We have to set this as visible first, and then hide, to force it to load the resources. They are deleted after the dbus call returns
-    m_body->setOpenLinks(false);
-    contentLayout->addWidget(m_body);
 
     QWidget *contentStretch = new QWidget;
     contentStretch->setMinimumSize(1, 1);
@@ -85,13 +80,6 @@ Widget::Widget()
     contentStretch->setFocusPolicy(Qt::NoFocus);
     contentLayout->addWidget(contentStretch);
 
-    connect(showBodyButton, &QPushButton::clicked, this, [=]() {
-        contentStretch->hide();
-        this->m_body->show();
-        adjustSize();
-        resize(800, height());
-    });
-    connect(showBodyButton, &QPushButton::clicked, showBodyButton, &QPushButton::hide);
     connect(muteButton, &QPushButton::clicked, this, &Widget::muteRequested);
     connect(muteButton, &QPushButton::clicked, this, &Widget::close);
     connect(m_body, &QTextBrowser::anchorClicked, this, [](const QUrl &url) { QDesktopServices::openUrl(url); });
@@ -101,10 +89,9 @@ Widget::Widget()
     m_dismissTimer->setInterval(10000);
     m_dismissTimer->setSingleShot(true);
     connect(m_dismissTimer, &QTimer::timeout, this, &QWidget::close);
-    connect(showBodyButton, &QPushButton::clicked, m_dismissTimer, &QTimer::stop);
     m_dismissTimer->start();
 
-    resize(600, 150);
+    resize(600, 100);
 
     setVisible(true);
     adjustSize();
@@ -126,9 +113,7 @@ void Widget::setSummary(const QString &summary)
 
 void Widget::setBody(QString body)
 {
-    m_body->setVisible(true); // We have to set this as visible first, and then hide, to force it to load the resources. They are deleted after the dbus call returns
     m_body->setHtml(body.replace("\n", "<br/>"));
-    m_body->setVisible(false); // We have to set this as visible first, and then hide, to force it to load the resources. They are deleted after the dbus call returns
 }
 
 void Widget::setDefaultAction(const QString &action)
