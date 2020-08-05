@@ -6,6 +6,10 @@
 
 int main(int argc, char *argv[])
 {
+    qunsetenv("QT_FORCE_STDERR_LOGGING");
+    qunsetenv("QT_ASSUME_STDERR_HAS_CONSOLE");
+    qunsetenv("QT_LOGGING_TO_CONSOLE");
+
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
 
