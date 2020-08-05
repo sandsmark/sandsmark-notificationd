@@ -69,7 +69,13 @@ Widget::Widget()
     m_body->setFixedSize(600, 100);
     m_body->setFocusPolicy(Qt::NoFocus);
     m_body->setOpenLinks(false);
+    m_body->document()->setDefaultStyleSheet(
+            "a {\n"
+            "  color: #aaf; \n"
+            "}\n"
+            );
     contentLayout->addWidget(m_body);
+
 
     QHBoxLayout *muteLayout = new QHBoxLayout;
     QPushButton *mute5Button = new QPushButton("Mute 5 minutes");
