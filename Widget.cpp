@@ -203,13 +203,8 @@ void Widget::enterEvent(QEvent *)
 
 void Widget::leaveEvent(QEvent *)
 {
-    if (m_body->isVisible()) {
-        return;
-    }
     setWindowOpacity(0.4); // slightly less visible on purpose, yes thank you
-    if (m_timeLeft > 0) {
-        m_dismissTimer->start(m_timeLeft);
-    }
+    m_dismissTimer->start(qMax(m_timeLeft, 0));
 }
 
 void Widget::onUrlClicked(const QUrl &url)
