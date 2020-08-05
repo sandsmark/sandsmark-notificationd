@@ -44,7 +44,7 @@ signals:
     void closeRequested(int id);
 
 private slots:
-    void onMuted();
+    void onMuted(const int minutes);
     void onUnmute();
 
 private:

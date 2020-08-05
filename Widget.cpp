@@ -71,8 +71,12 @@ Widget::Widget()
     m_body->setOpenLinks(false);
     contentLayout->addWidget(m_body);
 
-    QPushButton *muteButton = new QPushButton("Mute 5 minutes");
-    contentLayout->addWidget(muteButton);
+    QHBoxLayout *muteLayout = new QHBoxLayout;
+    QPushButton *mute5Button = new QPushButton("Mute 5 minutes");
+    QPushButton *mute30Button = new QPushButton("Mute 30 minutes");
+    muteLayout->addWidget(mute5Button);
+    muteLayout->addWidget(mute30Button);
+    contentLayout->addLayout(muteLayout);
 
     QWidget *contentStretch = new QWidget;
     contentStretch->setMinimumSize(1, 1);
@@ -80,8 +84,15 @@ Widget::Widget()
     contentStretch->setFocusPolicy(Qt::NoFocus);
     contentLayout->addWidget(contentStretch);
 
-    connect(muteButton, &QPushButton::clicked, this, &Widget::muteRequested);
-    connect(muteButton, &QPushButton::clicked, this, &Widget::close);
+    connect(mute5Button, &QPushButton::clicked, this, [this]() {
+        emit muteRequested(5);
+    });
+    connect(mute30Button, &QPushButton::clicked, this, [this]() {
+        emit muteRequested(30);
+    });
+
+    connect(this, &Widget::muteRequested, this, &Widget::close);
+
     connect(m_body, &QTextBrowser::anchorClicked, this, [](const QUrl &url) { QDesktopServices::openUrl(url); });
     connect(m_appIcon, &ClickableIcon::clicked, this, &Widget::actionClicked);
 

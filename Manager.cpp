@@ -13,7 +13,6 @@ Manager::Manager(QObject *parent) : QObject(parent)
     connect(m_unmuteIcon, &QSystemTrayIcon::activated, this, &Manager::onUnmute);
 
     m_unmuteTimer = new QTimer(this);
-    m_unmuteTimer->setInterval(5 * 60 * 1000);
     m_unmuteTimer->setSingleShot(true);
     connect(m_unmuteTimer, &QTimer::timeout, this, &Manager::onUnmute);
 }
@@ -174,12 +173,12 @@ void Manager::CloseNotification(quint32 id)
     qDebug() << "Asked to close" << id;
 }
 
-void Manager::onMuted()
+void Manager::onMuted(const int minutes)
 {
     m_unmuteIcon->setIcon(QPixmap(":/muted.png"));
     m_unmuteIcon->show();
 
-    m_unmuteTimer->start();
+    m_unmuteTimer->start(minutes * 60 * 1000);
 }
 
 void Manager::onUnmute()
