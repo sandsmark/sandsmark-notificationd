@@ -11,6 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include(GNUInstallDirs)
+
 find_package(Qt5 COMPONENTS Widgets DBus REQUIRED)
 add_executable(sandsmark-notificationd
     main.cpp
