@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=sandsmark-notificationd
+Comment=Simple notification daemon because everything else sucks
+Categories=System;
+Exec=sandsmark-notificationd
+Icon=sandsmark-notificationd
