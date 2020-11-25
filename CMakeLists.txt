@@ -11,8 +11,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include(GNUInstallDirs)
-
 find_package(Qt5 COMPONENTS Widgets DBus REQUIRED)
 add_executable(sandsmark-notificationd
     main.cpp
@@ -24,5 +22,4 @@ add_executable(sandsmark-notificationd
 
 target_link_libraries(sandsmark-notificationd PRIVATE Qt5::Widgets Qt5::DBus)
 install(TARGETS sandsmark-notificationd DESTINATION bin)
-install(FILES "muted.png" DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/32x32/apps RENAME "sandsmark-notificationd.png")
 install(FILES sandsmark-notificationd.desktop DESTINATION /etc/xdg/autostart/)
