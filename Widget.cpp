@@ -66,7 +66,9 @@ Widget::Widget()
     mainLayout->addLayout(contentLayout);
 
     m_body = new BodyWidget;
-    m_body->setFixedSize(600, 100);
+    m_body->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_body->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_body->setFixedSize(600, 50);
     m_body->setFocusPolicy(Qt::NoFocus);
     m_body->setOpenLinks(false);
     m_body->document()->setDefaultStyleSheet(
@@ -108,7 +110,7 @@ Widget::Widget()
     connect(m_dismissTimer, &QTimer::timeout, this, &QWidget::close);
     m_dismissTimer->start();
 
-    resize(600, 100);
+    resize(600, 50);
 
     setVisible(true);
     adjustSize();
@@ -169,7 +171,7 @@ void Widget::setAppIcon(const QImage &icon)
     }
 
     m_appIcon->setPixmap(QPixmap::fromImage(
-            icon.scaled(64, 64, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation)
+            icon.scaled(32, 32, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation)
         ));
 }
 
