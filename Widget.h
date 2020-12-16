@@ -17,7 +17,7 @@ protected:
     QVariant loadResource(int type, const QUrl &name) override;
 };
 
-class ClickableIcon : public QLabel
+class ClickableLabel : public QLabel
 {
     Q_OBJECT
 
@@ -47,7 +47,11 @@ public:
     void setSummary(const QString &summary);
     void setBody(QString body);
 
-    void setNotificationId(const int id) { m_appIcon->setNotificationId(id); m_id = id; }
+    void setNotificationId(const int id) {
+        m_appIcon->setNotificationId(id); m_id = id;
+        m_appName->setNotificationId(id); m_id = id;
+        m_summary->setNotificationId(id); m_id = id;
+    }
     void setDefaultAction(const QString &action);
 
     void setAppName(const QString &name);
@@ -74,9 +78,9 @@ private slots:
     void onUrlClicked(const QUrl &url);
 
 private:
-    QLabel *m_summary;
-    ClickableIcon *m_appIcon;
-    QLabel *m_appName;
+    ClickableLabel *m_summary;
+    ClickableLabel *m_appIcon;
+    ClickableLabel *m_appName;
     QTimer *m_dismissTimer;
     BodyWidget *m_body;
     int m_id;

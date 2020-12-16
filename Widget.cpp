@@ -42,11 +42,11 @@ Widget::Widget()
     appLayout->setSpacing(0);
     mainLayout->addLayout(appLayout);
 
-    m_appIcon = new ClickableIcon;
+    m_appIcon = new ClickableLabel;
     m_appIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     appLayout->addWidget(m_appIcon);
 
-    m_summary = new QLabel;
+    m_summary = new ClickableLabel;
     appLayout->addWidget(m_summary);
 
     QWidget *appStretch = new QWidget;
@@ -54,7 +54,7 @@ Widget::Widget()
     appStretch->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     appLayout->addWidget(appStretch);
 
-    m_appName = new QLabel;
+    m_appName = new ClickableLabel;
     QFont appFont = m_appName->font();
     appFont.setBold(true);
     m_appName->setFont(appFont);
@@ -102,7 +102,9 @@ Widget::Widget()
     connect(this, &Widget::muteRequested, this, &Widget::close);
 
     connect(m_body, &QTextBrowser::anchorClicked, this, [](const QUrl &url) { QDesktopServices::openUrl(url); });
-    connect(m_appIcon, &ClickableIcon::clicked, this, &Widget::actionClicked);
+    connect(m_appIcon, &ClickableLabel::clicked, this, &Widget::actionClicked);
+    connect(m_summary, &ClickableLabel::clicked, this, &Widget::actionClicked);
+    connect(m_appName, &ClickableLabel::clicked, this, &Widget::actionClicked);
 
     m_dismissTimer = new QTimer(this);
     m_dismissTimer->setInterval(10000);
@@ -139,6 +141,12 @@ void Widget::setDefaultAction(const QString &action)
 {
     m_appIcon->setClickAction(action);
     m_appIcon->setCursor(Qt::PointingHandCursor);
+
+    m_summary->setClickAction(action);
+    m_summary->setCursor(Qt::PointingHandCursor);
+
+    m_appName->setClickAction(action);
+    m_appName->setCursor(Qt::PointingHandCursor);
 }
 
 void Widget::setAppName(const QString &name)
@@ -248,7 +256,7 @@ QVariant BodyWidget::loadResource(int type, const QUrl &name)
     return file.readAll();
 }
 
-void ClickableIcon::mousePressEvent(QMouseEvent *)
+void ClickableLabel::mousePressEvent(QMouseEvent *)
 {
     if (m_action.isEmpty()) {
         return;
