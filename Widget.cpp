@@ -123,7 +123,6 @@ Widget::~Widget()
 {
     s_visibleNotifications--;
 
-    qDebug() << "Widget destroyed";
     emit notificationClosed(m_id, 2); // always fake that the user clicked it away
 }
 
@@ -225,7 +224,6 @@ void Widget::onUrlClicked(const QUrl &url)
 void Widget::onCloseRequested(const int id)
 {
     if (id == m_id) {
-        qDebug() << "Requested that we close";
         close();
     }
 }
@@ -261,7 +259,6 @@ void ClickableLabel::mousePressEvent(QMouseEvent *)
     if (m_action.isEmpty()) {
         return;
     }
-    qDebug() << "Clicked" << m_id << m_action;
 
     emit clicked(m_id, m_action);
 }

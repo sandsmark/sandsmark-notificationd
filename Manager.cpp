@@ -93,17 +93,7 @@ QImage decodeIcon(const QDBusArgument &crap)
 
 quint32 Manager::Notify(const QString &name, const quint32 replacesId, const QString &appIconName, const QString &summary, const QString &body, const QStringList &actions, const QVariantMap &hints, const int timeout)
 {
-    qDebug() << "name" << name;
-    qDebug() << "replaces" << replacesId;
-    qDebug() << "appicon:" << appIconName;
-    qDebug() << "summary" << summary;
-    qDebug() << "Body" << body;
-    qDebug() << "Actions" << actions;
-    qDebug() << "hints"<< hints;
-    qDebug() << "timeout" << timeout;
-
     if (m_unmuteTimer->isActive()) {
-        qDebug() << "Notifications muted";
         m_unmuteIcon->setIcon(QPixmap(":/muted-active.png"));
         return m_lastId++;
     }
