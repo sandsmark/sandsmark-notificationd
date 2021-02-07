@@ -12,6 +12,7 @@
 #include <QDir>
 #include <QScreen>
 #include <QDesktopServices>
+#include <QIcon>
 
 int Widget::s_visibleNotifications = 0;
 
@@ -163,6 +164,10 @@ void Widget::setAppIcon(const QString &iconPath)
             iconUrl = QUrl::fromLocalFile(iconPath);
         }
         icon = QImage(iconUrl.toLocalFile());
+
+        if (icon.isNull()) {
+            icon = QIcon::fromTheme(iconPath).pixmap(64, 64).toImage();
+        }
     } else {
         qDebug() << "Tried to set empty icon";
     }
