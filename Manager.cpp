@@ -28,7 +28,7 @@ bool Manager::init()
     }
 
     if (!QDBusConnection::sessionBus().registerService(serviceName)) {
-        qWarning() << "Failed to register service";
+        qWarning() << "Failed to register service (already a notification thingy running?";
         return false;
     }
 

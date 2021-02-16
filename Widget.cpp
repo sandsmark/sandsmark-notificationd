@@ -81,8 +81,8 @@ Widget::Widget()
 
 
     QHBoxLayout *muteLayout = new QHBoxLayout;
-    QPushButton *mute5Button = new QPushButton("Mute 5 minutes");
-    QPushButton *mute30Button = new QPushButton("Mute 30 minutes");
+    QPushButton *mute5Button = new QPushButton(QIcon::fromTheme("media-playback-pause-symbolic"), "Mute 5 minutes");
+    QPushButton *mute30Button = new QPushButton(QIcon::fromTheme("media-playback-pause-symbolic"), "Mute 30 minutes");
     muteLayout->addWidget(mute5Button);
     muteLayout->addWidget(mute30Button);
     contentLayout->addLayout(muteLayout);
