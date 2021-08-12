@@ -81,10 +81,12 @@ Widget::Widget()
 
 
     QHBoxLayout *muteLayout = new QHBoxLayout;
-    QPushButton *mute5Button = new QPushButton(QIcon::fromTheme("media-playback-pause-symbolic"), "Mute 5 minutes");
-    QPushButton *mute30Button = new QPushButton(QIcon::fromTheme("media-playback-pause-symbolic"), "Mute 30 minutes");
-    muteLayout->addWidget(mute5Button);
-    muteLayout->addWidget(mute30Button);
+    QPushButton *mute5MButton = new QPushButton(QIcon::fromTheme("media-playback-pause-symbolic"), "Mute 5 minutes");
+    QPushButton *mute30MButton = new QPushButton(QIcon::fromTheme("media-playback-pause-symbolic"), "Mute 30 minutes");
+    QPushButton *mute6HButton = new QPushButton(QIcon::fromTheme("media-playback-pause-symbolic"), "Mute 6 hours");
+    muteLayout->addWidget(mute5MButton);
+    muteLayout->addWidget(mute30MButton);
+    muteLayout->addWidget(mute6HButton);
     contentLayout->addLayout(muteLayout);
 
     QWidget *contentStretch = new QWidget;
@@ -93,11 +95,14 @@ Widget::Widget()
     contentStretch->setFocusPolicy(Qt::NoFocus);
     contentLayout->addWidget(contentStretch);
 
-    connect(mute5Button, &QPushButton::clicked, this, [this]() {
+    connect(mute5MButton, &QPushButton::clicked, this, [this]() {
         emit muteRequested(5);
     });
-    connect(mute30Button, &QPushButton::clicked, this, [this]() {
+    connect(mute30MButton, &QPushButton::clicked, this, [this]() {
         emit muteRequested(30);
+    });
+    connect(mute6HButton, &QPushButton::clicked, this, [this]() {
+        emit muteRequested(6 * 60);
     });
 
     connect(this, &Widget::muteRequested, this, &Widget::close);
