@@ -161,22 +161,22 @@ void Widget::setAppName(const QString &name)
 
 void Widget::setAppIcon(const QString &iconPath)
 {
-    QImage icon;
-
-    if (!iconPath.isEmpty()) {
-        QUrl iconUrl(iconPath);
-        if (!iconUrl.isLocalFile()) {
-            iconUrl = QUrl::fromLocalFile(iconPath);
-        }
-        icon = QImage(iconUrl.toLocalFile());
-
-        if (icon.isNull()) {
-            icon = QIcon::fromTheme(iconPath).pixmap(64, 64).toImage();
-        }
-    } else {
+    if (iconPath.isEmpty()) {
         qDebug() << "Tried to set empty icon";
+        return;
     }
-    setAppIcon(icon);
+
+    QIcon icon = QIcon::fromTheme(iconPath);
+    if (!icon.isNull()) {
+        m_appIcon->setPixmap(icon.pixmap(32, 32));
+        return;
+    }
+
+    QUrl iconUrl(iconPath);
+    if (!iconUrl.isLocalFile()) {
+        iconUrl = QUrl::fromLocalFile(iconPath);
+    }
+    setAppIcon(QImage(iconUrl.toLocalFile()));
 }
 
 void Widget::setAppIcon(const QImage &icon)
